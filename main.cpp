@@ -12,6 +12,7 @@ int main()
     cout << "2. REGLAS DEL JUEGO" << endl;
     cout << "3. SALIR DEL JJUEGO" << endl;
     cout << "Hola Jenny" << endl;
+    cout << "Que pongo" << endl;
 
     return 0;
 }
