@@ -33,7 +33,7 @@ int main()
                     break;
                 
                 case 3:
-                    return 0;
+                    juegoActivo = false;
             }
         } while (juegoActivo == true);
     return 0;
