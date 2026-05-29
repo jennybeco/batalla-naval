@@ -7,10 +7,11 @@ int main()
     cout << "MENU" << endl;
     cout << "BATALLA NAVAL" << endl;
     cout << "BY DIEGO & JENNY" << endl;
-    cout << "\nElige una opción:" << endl;
+    cout << "\nElige una opciï¿½n:" << endl;
     cout << "\n1. JUGAR" << endl;
     cout << "2. REGLAS DEL JUEGO" << endl;
     cout << "3. SALIR DEL JJUEGO" << endl;
+    cout << "Hola Jenny" << endl;
 
     return 0;
 }
