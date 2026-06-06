@@ -5,7 +5,6 @@ using namespace std;
 
 int menu(), juego();
 void pantallaInicio(), limpiarConsola(), reglas();
-string cualquierBoton;
 
 int main()
 {
@@ -75,8 +74,8 @@ void pantallaInicio()
 *********************+++********************############################%%%%%%%%########%@%-===++==:
 *****************************************************************************************+++++++++++
 ****************************************************************************************************)" << endl;
-cout << "INGRESE CUALQUIER BOTON: ";
-cin >> cualquierBoton;
+cout << "PRESIONE ENTER: ";
+cin.get();
 limpiarConsola();
 return;
 }
@@ -89,12 +88,13 @@ void limpiarConsola()
 
 void reglas()
 {
+    cin.ignore();
     cout << "REGLAS DEL JUEGO" << endl;
     cout << "Cada jugador tiene un tablero en el que coloca sus barcos.\nLos jugadores se turnan para realizar disparos y tratar de hundir los barcos del oponente." << endl; 
     cout << "El primer jugador en hundir todos los barcos del oponente gana la partida." << endl;
     cout << "----------------------------------------------------------------------------" << endl;
-    cout << "INGRESE CUALQUIER BOTON PARA REGRESAR AL MENU: ";
-    cin >> cualquierBoton;
+    cout << "PRESIONE ENTER PARA REGRESAR AL MENU: ";
+    cin.get();
     limpiarConsola();
     return;
 }
