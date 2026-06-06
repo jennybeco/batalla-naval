@@ -1,16 +1,35 @@
 #include <iostream>
-
+#include <windows.h> //esta se usa para que se pueden ver los colores
+#include <conio.h> //no se para que es pero tambien estaba en el ejemplo de la maestra
 
 using namespace std;
+
+#define ROSA      "\033[95m"
+#define RESET     "\033[0m" //este es para cuando quiera que regrese a su color original
+#define ROJO      "\033[91m"
+
+//este es el codigo que puso la maestra para que funcionaran los colores
+//aunq en mi compu si se podia ver los colores sin este texto pero como no se porque mejor lo dejo asi por si acaso
+void enableANSI()
+{
+    HANDLE hOut = GetStdHandle(STD_OUTPUT_HANDLE);
+    DWORD dwMode = 0;
+    GetConsoleMode(hOut, &dwMode);
+    dwMode |= ENABLE_VIRTUAL_TERMINAL_PROCESSING;
+    SetConsoleMode(hOut, dwMode);
+    system("chcp 65001 > nul");
+}
 
 int menu(), juego();
 void pantallaInicio(), limpiarConsola(), reglas();
 
 int main()
 {
-    bool juegoActivo = true;
+    enableANSI(); //para los ccolores
     system ("chcp 65001 > nul");
+
     pantallaInicio();
+    bool juegoActivo = true;
     do
     {
         switch (menu())
@@ -34,19 +53,38 @@ int main()
 int menu()
 {
     int opcion;
-    cout << "MENU PRINCIPAL" << endl;
-    cout << "\nELIGE UNA OPCION:" << endl;
+    cout << R"(
+  __  __
+ |  \/  |___ _ _ _  _
+ | |\/| / -_) ' \ || |
+ |_|  |_\___|_||_\_,_|
+
+        )" << endl;
+    cout << "ELIGE UNA OPCIÓN:" << endl;
     cout << "1. JUGAR" << endl;
     cout << "2. REGLAS DEL JUEGO" << endl;
     cout << "3. SALIR DEL JUEGO" << endl;
+    do {
+    cout << RESET << "\nOpcion: ";
     cin >> opcion;
+    if (opcion < 1 || opcion > 3)
+        cout << ROJO << "Esa opción no existe. Elige 1, 2 o 3." << RESET << endl;
+    } while (opcion < 1 || opcion > 3);
 
     return opcion;
 }
 
 void pantallaInicio()
 {
-    cout << "BATALLA NAVAL POR JENNY Y DIEGO " << endl;
+    cout << ROSA;
+        cout << R"(
+ .----.   .--.  .---.  .--.  .-.   .-.     .--.     .-. .-.  .--.  .-. .-.  .--.  .-.
+| {}  } / {} \{_   _}/ {} \ | |   | |    / {} \    |  `| | / {} \ | | | | / {} \ | |
+| {}  }/  /\  \ | | /  /\  \| `--.| `--./  /\  \   | |\  |/  /\  \\ \_/ //  /\  \| `--.
+`----' `-'  `-' `-' `-'  `-'`----'`----'`-'  `-'   `-' `-'`-'  `-' `---' `-'  `-'`----'
+
+        )" << endl;
+    cout << "POR JENNY Y DIEGO " << endl;
     cout << R"(
                                                                 =.
                      ..:..-%*..                                 =.
@@ -74,7 +112,8 @@ void pantallaInicio()
 *********************+++********************############################%%%%%%%%########%@%-===++==:
 *****************************************************************************************+++++++++++
 ****************************************************************************************************)" << endl;
-cout << "PRESIONE ENTER: ";
+cout << RESET;
+cout << "\nPRESIONE ENTER: ";
 cin.get();
 limpiarConsola();
 return;
@@ -89,10 +128,24 @@ void limpiarConsola()
 void reglas()
 {
     cin.ignore();
-    cout << "REGLAS DEL JUEGO" << endl;
+    cout << ROSA << R"(  ___          _              _     _      _
+ | _ \___ __ _| |__ _ ___  __| |___| |  _ | |_  _ ___ __ _ ___
+ |   / -_) _` | / _` (_-< / _` / -_) | | || | || / -_) _` / _ \
+ |_|_\___\__, |_\__,_/__/ \__,_\___|_|  \__/ \_,_\___\__, \___/
+         |___/                                       |___/     )" << RESET << endl;
     cout << "Cada jugador tiene un tablero en el que coloca sus barcos.\nLos jugadores se turnan para realizar disparos y tratar de hundir los barcos del oponente." << endl;
     cout << "El primer jugador en hundir todos los barcos del oponente gana la partida." << endl;
-    cout << "----------------------------------------------------------------------------" << endl;
+    cout << ROSA << "------------------------------------------------------------------------------------------------------------------------" << RESET << endl;
+    cout << R"(   ___                          ___  _                    _ __   __
+  / _ )___ ____________  ___   / _ \(_)__ ___  ___  ___  (_) /  / /__ ___
+ / _  / _ `/ __/ __/ _ \(_-<  / // / (_-</ _ \/ _ \/ _ \/ / _ \/ / -_|_-<
+/____/\_,_/_/  \__/\___/___/ /____/_/___/ .__/\___/_//_/_/_.__/_/\__/___/
+                                       /_/                               )" << endl;
+    cout << "  - 1 Portaaviones.       (5 espacios)" << endl;
+    cout << "  - 1 Acorazado.          (4 espacios)" << endl;
+    cout << "  - 2 Destructores.       (3 espacios)" << endl;
+    cout << "  - 1 Lancha.             (2 espacios)" << endl;
+    cout << ROSA << "------------------------------------------------------------------------------------------------------------------------" << RESET << endl;
     cout << "PRESIONE ENTER PARA REGRESAR AL MENU: ";
     cin.get();
     limpiarConsola();
