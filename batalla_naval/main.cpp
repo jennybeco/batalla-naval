@@ -1,6 +1,8 @@
 #include <iostream>
 #include <windows.h> //esta se usa para que se pueden ver los colores
 #include <conio.h> //no se para que es pero tambien estaba en el ejemplo de la maestra
+#include <cstdlib> // para el random
+#include <ctime>
 
 using namespace std;
 
@@ -19,14 +21,18 @@ void enableANSI()
     SetConsoleMode(hOut, dwMode);
     system("chcp 65001 > nul");
 }
+const int tam_tablero= 10, num_barcos= 5, tam_barcos[num_barcos]= {5, 4, 3, 3, 2};
+const char espacio_barco= 'B', destruye_barco= 'X', no_barco= 'O', agua= '~';;
+//La B indica donde estara el barco, la X cuando si le pegue al barco, la O para cuando no le pego a un barco
 
 int menu(), juego();
-void pantallaInicio(), limpiarConsola(), reglas();
+void pantallaInicio(), limpiarConsola(), reglas(),  iniciar_tablero(char tablero[tam_tablero][tam_tablero]);
 
 int main()
 {
     enableANSI(); //para los ccolores
     system ("chcp 65001 > nul");
+    srand(time(NULL));
 
     pantallaInicio();
     bool juegoActivo = true;
@@ -35,7 +41,7 @@ int main()
         switch (menu())
         {
             case 1:
-
+                juego();
                 break;
 
             case 2:
@@ -146,8 +152,48 @@ void reglas()
     cout << "  - 2 Destructores.       (3 espacios)" << endl;
     cout << "  - 1 Lancha.             (2 espacios)" << endl;
     cout << ROSA << "------------------------------------------------------------------------------------------------------------------------" << RESET << endl;
-    cout << "PRESIONE ENTER PARA REGRESAR AL MENU: ";
+    cout << "\nPRESIONE ENTER PARA REGRESAR AL MENU: ";
     cin.get();
     limpiarConsola();
     return;
 }
+
+int juego()
+{
+    limpiarConsola();
+
+    string primer_nombre, segundo_nombre;
+    cout << ROSA << R"(  ___          _    _                _          _                   _          ____
+ | _ \___ __ _(_)__| |_ _ _ ___   __| |___   _ | |_  _ __ _ __ _ __| |___ _ _ / __ \ ___
+ |   / -_) _` | (_-<  _| '_/ _ \ / _` / -_) | || | || / _` / _` / _` / _ \ '_/ / _` (_-<
+ |_|_\___\__, |_/__/\__|_| \___/ \__,_\___|  \__/ \_,_\__, \__,_\__,_\___/_| \ \__,_/__/
+         |___/                                        |___/                   \____/    )" << RESET;
+    cout << ROSA << "--------------------------------------------------------------------------------------------------------------------" << RESET << endl;
+    cout << "\n  Nombre Jugador 1: ";
+    cin >> primer_nombre;
+
+    cout << "  Nombre Jugador 2: ";
+    cin >> segundo_nombre;
+
+    char tablero_jugador1[tam_tablero][tam_tablero], tablero_jugador2[tam_tablero][tam_tablero];  //creo q se entiende pero es el tablero ya con los barcos
+    char tiros_jugador1[tam_tablero][tam_tablero]; //los lugares donde ha disparado el primer jugador, no se como explicarlo
+    char tiros_jugador2[tam_tablero][tam_tablero]; // lo mismo pero del segundo jugador
+
+    iniciar_tablero(tiros_jugador1); //con estos quiero llenar de "agua" el tablero pero no se si deberia ir antes o despues el void
+    iniciar_tablero(tiros_jugador2);
+
+    int turno = 1;
+    bool activo = true;
+
+    while (activo)
+    {
+
+    }
+}
+void iniciar_tablero(char tablero[tam_tablero][tam_tablero])
+{
+    for (int d = 0; d < tam_tablero; d++)
+        for (int j = 0; j < tam_tablero; j++) // este columnas arriba filas, lo pongo porque se me olvida cual es cual :/
+            tablero[d][j] = agua; //con ese se deberia de ver el simbolito del agua
+}
+
