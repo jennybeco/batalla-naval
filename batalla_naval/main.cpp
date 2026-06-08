@@ -66,7 +66,7 @@ int menu()
  |_|  |_\___|_||_\_,_|
 
         )" << endl;
-    cout << "ELIGE UNA OPCIÓN:" << endl;
+    cout << "ELIGE UNA OPCIÃ“N:" << endl;
     cout << "1. JUGAR" << endl;
     cout << "2. REGLAS DEL JUEGO" << endl;
     cout << "3. SALIR DEL JUEGO" << endl;
@@ -74,7 +74,7 @@ int menu()
     cout << RESET << "\nOpcion: ";
     cin >> opcion;
     if (opcion < 1 || opcion > 3)
-        cout << ROJO << "Esa opción no existe. Elige 1, 2 o 3." << RESET << endl;
+        cout << ROJO << "Esa opciÃ³n no existe. Elige 1, 2 o 3." << RESET << endl;
     } while (opcion < 1 || opcion > 3);
 
     return opcion;
@@ -189,11 +189,79 @@ int juego()
     {
 
     }
+    return 0; 
 }
 void iniciar_tablero(char tablero[tam_tablero][tam_tablero])
 {
     for (int d = 0; d < tam_tablero; d++)
+    {
         for (int j = 0; j < tam_tablero; j++) // este columnas arriba filas, lo pongo porque se me olvida cual es cual :/
-            tablero[d][j] = agua; //con ese se deberia de ver el simbolito del agua
+        {                                     //con ese se deberia de ver el simbolito del agua
+            tablero[d][j] = agua; 
+        }
+            
+    } 
+}
+        
+void colocar_barcos(char tablero[tam_tablero][tam_tablero])
+{
+    for(int i = 0; i < num_barcos; i++)
+    {
+        bool colocado = false;
+        while(colocado = false)
+        {
+            int columna, fila;
+            int direccion = rand() % 2; // coin flip para decidir en que orientacion se coloca el barco
+
+            if(direccion == 1) // el barco se pone de forma vertical
+            {
+                fila = rand() % (tam_tablero + 1 - tam_barcos[i]); // resta largo de barco para evitar que se salga del tablero cont ->
+                columna = rand() % tam_tablero; // -> + 1 para hacer posible que el barco quede pegado a la ultima casilla
+            }
+            else // direccion = 2. el barco se pone de forma horizontal
+            {
+                columna = rand() % (tam_tablero + 1 - tam_barcos[i]);
+                fila = rand() % tam_tablero;
+            }
+
+            bool choca = false;
+            for(int j = 0; j < tam_barcos[i]; j++)
+            {
+                if(direccion == 1)
+                {
+                  if(tablero[fila][columna + j] != agua)
+                  {
+                    choca = true;
+                  }  
+                }
+                else
+                {
+                    if(tablero[fila + j][columna] != agua)
+                    {
+                        choca = true;
+                    }
+                }
+
+                if(choca == false)
+                {
+                    for(int j = 0; j < tam_barcos[i]; j++)
+                    {
+                        if(direccion == 1)
+                        {
+                            tablero[fila + j][columna] = espacio_barco;
+                        }
+                        else
+                        {
+                            tablero[fila][columna + j] = espacio_barco;
+                        }
+                    }
+                    colocado = true;
+                }
+            }
+        }
+    }
+}
+
+    
 }
 
