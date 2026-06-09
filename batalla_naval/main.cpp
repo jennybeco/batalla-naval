@@ -226,9 +226,9 @@ int juego()
             if (realizar_disparo(tablero_jugador2, tiros_jugador1, fila, columna) == true)
                 cout << ROJO << "\nLe pegaste a un barco enemigo." << RESET << endl;
             else
-                cout << AZUL << "\nAgua. Nadota." << RESET << endl;
+                cout << AZUL << "\nLe pegaste... pero al agua JAJAJA." << RESET << endl;
 
-            if (alguien_gano(tablero_jugador1) == true)
+            if (alguien_gano(tablero_jugador2) == true)
             {
                 limpiarConsola();
                 mostrar_tableros(segundo_nombre, tablero_jugador2, primer_nombre, tiros_jugador2);
@@ -237,7 +237,48 @@ int juego()
                 cin.get();
                 activo = false;
             }
+            else turno = 2;
+        }
+        else
+    }
+        mostrar_tableros(primer_nombre, tiros_jugador1, segundo_nombre, tiros_jugador2);
+
+            cout << ROSA << "Turno de " << segundo_nombre << RESET << endl;
+            cout << "Ingresa las coordenadas de tu disparo:" << endl;
+
+            if (pedir_coordenada(segundo_nombre, fila, columna, tiros_jugador2) == false)
+            {
+                limpiarConsola();
+                cout << ROJO << "\n" << segundo_nombre << " se rindio." << RESET;
+                cout << "\nLERO LERO JAJJAJA" << endl;
+                cout << ROSA << primer_nombre << " es la/el ganador(a).\n" << RESET;
+                cout << "\nPRESIONE ENTER PARA CONTINUAR: ";
+                cin.get();
+                return 0;
+            }
+
+            if (realizar_disparo(tablero_jugador1, tiros_jugador2, fila, columna) == true)
+                cout << ROJO << "\nLe pegaste a un barco enemigo." << RESET << endl;
+            else
+                cout << AZUL << "\Le pegaste... pero al agua JAJAJA." << RESET << endl;
+
+            if (alguien_gano(tablero_jugador1) == true)
+            {
+                limpiarConsola();
+                mostrar_tableros(primer_nombre, tiros_jugador1, segundo_nombre, tiros_jugador2);
+                cout << ROSA << "\n" << segundo_nombre << " Ganaste!!! Hundiste todos los barcos, suertudot@.\n" << RESET;
+                cout << "\nPRESIONE ENTER PARA CONTINUAR: ";
+                cin.get();
+                activo = false;
+            }
             else turno = 1;
+        }
+
+        if (activo)
+        {
+            cout << "\nPRESIONE ENTER PARA EL SIGUIENTE TURNO: ";
+            cin.ignore();
+            cin.get();
         }
     }
     return 0;
@@ -252,7 +293,6 @@ void iniciar_tablero(char tablero[tam_tablero][tam_tablero])
         {
             tablero[d][j] = agua; //con ese se deberia de ver el simbolito del agua
         }
-
     }
 }
 
@@ -313,4 +353,11 @@ void colocar_barcos(char tablero[tam_tablero][tam_tablero])
             }
         }
     }
+bool alguien_gano(char tablero[tam_tablero][tam_tablero])
+{
+    for (int d = 0; d < tam_tablero; d++)
+        for (int j = 0; j < tam_tablero; j++)
+            if (tablero[d][j] == espacio_barco)
+                return false;
+    return true; // regresa true si ya no queda ninguna B y pues false si todavia hay alguno
 }
