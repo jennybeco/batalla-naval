@@ -9,6 +9,8 @@ using namespace std;
 #define ROSA      "\033[95m"
 #define RESET     "\033[0m" //este es para cuando quiera que regrese a su color original
 #define ROJO      "\033[91m"
+#define AZUL      "\033[94m"
+#define MORADO    "\033[35m"
 
 //este es el codigo que puso la maestra para que funcionaran los colores
 //aunq en mi compu si se podia ver los colores sin este texto pero como no se porque mejor lo dejo asi por si acaso
@@ -26,7 +28,10 @@ const char espacio_barco= 'B', destruye_barco= 'X', no_barco= 'O', agua= '~';;
 //La B indica donde estara el barco, la X cuando si le pegue al barco, la O para cuando no le pego a un barco
 
 int menu(), juego();
-void pantallaInicio(), limpiarConsola(), reglas(),  iniciar_tablero(char tablero[tam_tablero][tam_tablero]);
+void pantallaInicio(), limpiarConsola(), reglas(),  iniciar_tablero(char tablero[tam_tablero][tam_tablero]), colocar_barcos(char tablero[tam_tablero][tam_tablero]);
+void mostrar_tableros(string primer_nombre, char tiros_jugador1[tam_tablero][tam_tablero], string segundo_nombre, char tiros_jugador2[tam_tablero][tam_tablero]);
+bool realizar_disparo(char tablero_jugador[tam_tablero][tam_tablero],char tiros_jugador[tam_tablero][tam_tablero],int fila,int columna);
+bool pedir_coordenada(string nombre, int &fila, int &columna,char tiros_jugador[tam_tablero][tam_tablero]), alguien_gano(char tablero[tam_tablero][tam_tablero]);
 
 int main()
 {
@@ -53,7 +58,7 @@ int main()
         }
     }while (juegoActivo == true);
 
-
+    return 0;
 }
 
 int menu()
@@ -141,6 +146,7 @@ void reglas()
          |___/                                       |___/     )" << RESET << endl;
     cout << "Cada jugador tiene un tablero en el que coloca sus barcos.\nLos jugadores se turnan para realizar disparos y tratar de hundir los barcos del oponente." << endl;
     cout << "El primer jugador en hundir todos los barcos del oponente gana la partida." << endl;
+    cout << "Para rendirte una vez iniciada la partida, al pedir coordenadas presione la letra Q y debera aparecer un mensaje." << endl;
     cout << ROSA << "------------------------------------------------------------------------------------------------------------------------" << RESET << endl;
     cout << R"(   ___                          ___  _                    _ __   __
   / _ )___ ____________  ___   / _ \(_)__ ___  ___  ___  (_) /  / /__ ___
@@ -178,22 +184,133 @@ int juego()
     char tablero_jugador1[tam_tablero][tam_tablero], tablero_jugador2[tam_tablero][tam_tablero];  //creo q se entiende pero es el tablero ya con los barcos
     char tiros_jugador1[tam_tablero][tam_tablero]; //los lugares donde ha disparado el primer jugador, no se como explicarlo
     char tiros_jugador2[tam_tablero][tam_tablero]; // lo mismo pero del segundo jugador
-
-    iniciar_tablero(tiros_jugador1); //con estos quiero llenar de "agua" el tablero pero no se si deberia ir antes o despues el void
+    iniciar_tablero(tablero_jugador1);
+    iniciar_tablero(tablero_jugador2);
+    iniciar_tablero(tiros_jugador1);
     iniciar_tablero(tiros_jugador2);
+    //son 4 tableros porque son dos que muestran los tiros que se hacen y otro pues las tablas normal
+    colocar_barcos(tablero_jugador1);
+    colocar_barcos(tablero_jugador2);
+
+    cout << ROSA << "\nLos barcos han sido colocados." << RESET << endl;
+    cout << "\nPRESIONE ENTER PARA CONTINUAR: ";
+    cin.ignore();
+    cin.get();
 
     int turno = 1;
     bool activo = true;
 
     while (activo)
     {
+    limpiarConsola();
+        int fila, columna;
 
+        if (turno == 1)
+        {
+            mostrar_tableros(primer_nombre, tiros_jugador1, segundo_nombre, tiros_jugador2); // muestra el tablero de la primera jugadora con A de mujer
+
+            cout << ROSA << "Turno de " << primer_nombre << RESET << endl;
+            cout << "Ingresa las coordenadas de tu disparo:" << endl;
+
+            if (pedir_coordenada(primer_nombre, fila, columna, tiros_jugador1)== false)
+            {
+                limpiarConsola();
+                cout << ROJO << "\n" << primer_nombre << " se rindio." << RESET;
+                cout << "\nLERO LERO JAJJAJA" <<endl;
+                cout << ROSA << segundo_nombre << " es la/el ganador(a).\n" << RESET;
+                cout << "\nPRESIONE ENTER PARA CONTINUAR: ";
+                cin.get();
+                return 0;
+            }
+
+            if (realizar_disparo(tablero_jugador2, tiros_jugador1, fila, columna) == true)
+                cout << ROJO << "\nLe pegaste a un barco enemigo." << RESET << endl;
+            else
+                cout << AZUL << "\nAgua. Nadota." << RESET << endl;
+
+            if (alguien_gano(tablero_jugador1) == true)
+            {
+                limpiarConsola();
+                mostrar_tableros(segundo_nombre, tablero_jugador2, primer_nombre, tiros_jugador2);
+                cout << ROSA << "\n¡" << segundo_nombre << "Ganaste!!! Hundiste todos los barcos, suertudot@.\n" << RESET;
+                cout << "\nPRESIONE ENTER PARA CONTINUAR: ";
+                cin.get();
+                activo = false;
+            }
+            else turno = 1;
+        }
     }
+    return 0;
 }
+
+
 void iniciar_tablero(char tablero[tam_tablero][tam_tablero])
 {
     for (int d = 0; d < tam_tablero; d++)
-        for (int j = 0; j < tam_tablero; j++) // este columnas arriba filas, lo pongo porque se me olvida cual es cual :/
+    {
+        for (int j = 0; j < tam_tablero; j++) // abajo columnas arriba filas, lo pongo porque se me olvida cual es cual :/
+        {
             tablero[d][j] = agua; //con ese se deberia de ver el simbolito del agua
+        }
+
+    }
 }
 
+void colocar_barcos(char tablero[tam_tablero][tam_tablero])
+{
+    for(int i = 0; i < num_barcos; i++)
+    {
+        bool colocado = false;
+        while(colocado == false)
+        {
+            int columna, fila;
+            int direccion = rand() % 2; // coin flip para decidir en que orientacion se coloca el barco
+
+            if(direccion == 1) // el barco se pone de forma vertical
+            {
+                fila = rand() % (tam_tablero + 1 - tam_barcos[i]); // resta largo de barco para evitar que se salga del tablero cont ->
+                columna = rand() % tam_tablero; // -> + 1 para hacer posible que el barco quede pegado a la ultima casilla
+            }
+            else // direccion = 2. el barco se pone de forma horizontal
+            {
+                columna = rand() % (tam_tablero + 1 - tam_barcos[i]);
+                fila = rand() % tam_tablero;
+            }
+
+            bool choca = false;
+            for(int j = 0; j < tam_barcos[i]; j++)
+            {
+                if(direccion == 1)
+                {
+                  if(tablero[fila][columna + j] != agua)
+                  {
+                    choca = true;
+                  }
+                }
+                else
+                {
+                    if(tablero[fila + j][columna] != agua)
+                    {
+                        choca = true;
+                    }
+                }
+
+                if(choca == false)
+                {
+                    for(int j = 0; j < tam_barcos[i]; j++)
+                    {
+                        if(direccion == 1)
+                        {
+                            tablero[fila + j][columna] = espacio_barco;
+                        }
+                        else
+                        {
+                            tablero[fila][columna + j] = espacio_barco;
+                        }
+                    }
+                    colocado = true;
+                }
+            }
+        }
+    }
+}
