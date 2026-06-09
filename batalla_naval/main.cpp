@@ -192,7 +192,7 @@ int juego()
     colocar_barcos(tablero_jugador1);
     colocar_barcos(tablero_jugador2);
 
-    cout << ROSA << "\nLos barcos han sido colocados." << RESET << endl;
+      cout << ROSA << "\nLos barcos han sido colocados." << RESET << endl;
     cout << "\nPRESIONE ENTER PARA CONTINUAR: ";
     cin.ignore();
     cin.get();
@@ -202,7 +202,7 @@ int juego()
 
     while (activo)
     {
-    limpiarConsola();
+        limpiarConsola();
         int fila, columna;
 
         if (turno == 1)
@@ -212,7 +212,7 @@ int juego()
             cout << ROSA << "Turno de " << primer_nombre << RESET << endl;
             cout << "Ingresa las coordenadas de tu disparo:" << endl;
 
-            if (pedir_coordenada(primer_nombre, fila, columna, tiros_jugador1)== false)
+            if (pedir_coordenada(primer_nombre, fila, columna, tiros_jugador1) == false)
             {
                 limpiarConsola();
                 cout << ROJO << "\n" << primer_nombre << " se rindio." << RESET;
@@ -228,21 +228,20 @@ int juego()
             else
                 cout << AZUL << "\nLe pegaste... pero al agua JAJAJA." << RESET << endl;
 
-            if (alguien_gano(tablero_jugador2) == true)
+            if (alguien_gano(tablero_jugador2) == true) // BUG: antes revisaba tablero_jugador1, hay que revisar al que le dispararon
             {
                 limpiarConsola();
                 mostrar_tableros(segundo_nombre, tablero_jugador2, primer_nombre, tiros_jugador2);
-                cout << ROSA << "\n¡" << segundo_nombre << "Ganaste!!! Hundiste todos los barcos, suertudot@.\n" << RESET;
+                cout << ROSA << "\n" << primer_nombre << " Ganaste!!! Hundiste todos los barcos, suertudot@.\n" << RESET;
                 cout << "\nPRESIONE ENTER PARA CONTINUAR: ";
                 cin.get();
                 activo = false;
             }
-            else turno = 2;
+            else turno = 2; // BUG: antes decia turno = 1, nunca cambiaba de turno
         }
-        else
-    }
-<<<<<<< HEAD
-        mostrar_tableros(primer_nombre, tiros_jugador1, segundo_nombre, tiros_jugador2);
+        else // turno == 2
+        {
+            mostrar_tableros(primer_nombre, tiros_jugador1, segundo_nombre, tiros_jugador2);
 
             cout << ROSA << "Turno de " << segundo_nombre << RESET << endl;
             cout << "Ingresa las coordenadas de tu disparo:" << endl;
@@ -261,7 +260,7 @@ int juego()
             if (realizar_disparo(tablero_jugador1, tiros_jugador2, fila, columna) == true)
                 cout << ROJO << "\nLe pegaste a un barco enemigo." << RESET << endl;
             else
-                cout << AZUL << "\Le pegaste... pero al agua JAJAJA." << RESET << endl;
+                cout << AZUL << "\nLe pegaste... pero al agua JAJAJA." << RESET << endl;
 
             if (alguien_gano(tablero_jugador1) == true)
             {
@@ -283,92 +282,17 @@ int juego()
         }
     }
     return 0;
-=======
-    return 0; 
->>>>>>> e3f6766c76eafde4ecacfc0109ea9a9cae9f78a2
 }
-
 
 void iniciar_tablero(char tablero[tam_tablero][tam_tablero])
 {
     for (int d = 0; d < tam_tablero; d++)
     {
-<<<<<<< HEAD
         for (int j = 0; j < tam_tablero; j++) // abajo columnas arriba filas, lo pongo porque se me olvida cual es cual :/
         {
             tablero[d][j] = agua; //con ese se deberia de ver el simbolito del agua
         }
     }
-=======
-        for (int j = 0; j < tam_tablero; j++) // este columnas arriba filas, lo pongo porque se me olvida cual es cual :/
-        {                                     //con ese se deberia de ver el simbolito del agua
-            tablero[d][j] = agua; 
-        }
-            
-    } 
-}
-        
-void colocar_barcos(char tablero[tam_tablero][tam_tablero])
-{
-    for(int i = 0; i < num_barcos; i++)
-    {
-        bool colocado = false;
-        while(colocado = false)
-        {
-            int columna, fila;
-            int direccion = rand() % 2; // coin flip para decidir en que orientacion se coloca el barco
-
-            if(direccion == 1) // el barco se pone de forma vertical
-            {
-                fila = rand() % (tam_tablero + 1 - tam_barcos[i]); // resta largo de barco para evitar que se salga del tablero cont ->
-                columna = rand() % tam_tablero; // -> + 1 para hacer posible que el barco quede pegado a la ultima casilla
-            }
-            else // direccion = 2. el barco se pone de forma horizontal
-            {
-                columna = rand() % (tam_tablero + 1 - tam_barcos[i]);
-                fila = rand() % tam_tablero;
-            }
-
-            bool choca = false;
-            for(int j = 0; j < tam_barcos[i]; j++)
-            {
-                if(direccion == 1)
-                {
-                  if(tablero[fila][columna + j] != agua)
-                  {
-                    choca = true;
-                  }  
-                }
-                else
-                {
-                    if(tablero[fila + j][columna] != agua)
-                    {
-                        choca = true;
-                    }
-                }
-
-                if(choca == false)
-                {
-                    for(int j = 0; j < tam_barcos[i]; j++)
-                    {
-                        if(direccion == 1)
-                        {
-                            tablero[fila + j][columna] = espacio_barco;
-                        }
-                        else
-                        {
-                            tablero[fila][columna + j] = espacio_barco;
-                        }
-                    }
-                    colocado = true;
-                }
-            }
-        }
-    }
-}
-
-    
->>>>>>> e3f6766c76eafde4ecacfc0109ea9a9cae9f78a2
 }
 
 void colocar_barcos(char tablero[tam_tablero][tam_tablero])
@@ -386,7 +310,7 @@ void colocar_barcos(char tablero[tam_tablero][tam_tablero])
                 fila = rand() % (tam_tablero + 1 - tam_barcos[i]); // resta largo de barco para evitar que se salga del tablero cont ->
                 columna = rand() % tam_tablero; // -> + 1 para hacer posible que el barco quede pegado a la ultima casilla
             }
-            else // direccion = 2. el barco se pone de forma horizontal
+            else // direccion = 0. el barco se pone de forma horizontal
             {
                 columna = rand() % (tam_tablero + 1 - tam_barcos[i]);
                 fila = rand() % tam_tablero;
@@ -397,37 +321,31 @@ void colocar_barcos(char tablero[tam_tablero][tam_tablero])
             {
                 if(direccion == 1)
                 {
-                  if(tablero[fila][columna + j] != agua)
-                  {
-                    choca = true;
-                  }
+                    if(tablero[fila + j][columna] != agua) // BUG: antes era [fila][columna+j] en vertical, estaba al reves
+                        choca = true;
                 }
                 else
                 {
-                    if(tablero[fila + j][columna] != agua)
-                    {
+                    if(tablero[fila][columna + j] != agua)
                         choca = true;
-                    }
                 }
+            } // BUG: el if(choca==false) estaba DENTRO de este for, lo saque afuera para que revise todo el barco antes de colocarlo
 
-                if(choca == false)
+            if(choca == false)
+            {
+                for(int j = 0; j < tam_barcos[i]; j++)
                 {
-                    for(int j = 0; j < tam_barcos[i]; j++)
-                    {
-                        if(direccion == 1)
-                        {
-                            tablero[fila + j][columna] = espacio_barco;
-                        }
-                        else
-                        {
-                            tablero[fila][columna + j] = espacio_barco;
-                        }
-                    }
-                    colocado = true;
+                    if(direccion == 1)
+                        tablero[fila + j][columna] = espacio_barco;
+                    else
+                        tablero[fila][columna + j] = espacio_barco;
                 }
+                colocado = true;
             }
         }
     }
+}
+
 bool alguien_gano(char tablero[tam_tablero][tam_tablero])
 {
     for (int d = 0; d < tam_tablero; d++)
