@@ -30,8 +30,9 @@ const char espacio_barco= 'B', destruye_barco= 'X', no_barco= 'O', agua= '~';;
 int menu(), juego();
 void pantallaInicio(), limpiarConsola(), reglas(),  iniciar_tablero(char tablero[tam_tablero][tam_tablero]), colocar_barcos(char tablero[tam_tablero][tam_tablero]);
 void mostrar_tableros(string primer_nombre, char tiros_jugador1[tam_tablero][tam_tablero], string segundo_nombre, char tiros_jugador2[tam_tablero][tam_tablero]);
-bool realizar_disparo(char tablero_jugador[tam_tablero][tam_tablero],char tiros_jugador[tam_tablero][tam_tablero],int fila,int columna);
+bool realizar_disparo(char tablero_jugador[tam_tablero][tam_tablero],char tiros_jugador[tam_tablero][tam_tablero],int fila,int columna); // BUG: me tarde un monton decubriendo que le tenia que poner int fila, int columna
 bool pedir_coordenada(string nombre, int &fila, int &columna,char tiros_jugador[tam_tablero][tam_tablero]), alguien_gano(char tablero[tam_tablero][tam_tablero]);
+//BUG: no cambiaba de valor la fila y la columa porque no le habia puesto el &
 
 int main()
 {
@@ -71,15 +72,15 @@ int menu()
  |_|  |_\___|_||_\_,_|
 
         )" << endl;
-    cout << "ELIGE UNA OPCIÃ“N:" << endl;
+    cout << "ELIGE UNA OPCIÓN:" << endl;
     cout << "1. JUGAR" << endl;
     cout << "2. REGLAS DEL JUEGO" << endl;
     cout << "3. SALIR DEL JUEGO" << endl;
     do {
-    cout << RESET << "\nOpcion: ";
+    cout << RESET << "\nOpción: ";
     cin >> opcion;
     if (opcion < 1 || opcion > 3)
-        cout << ROJO << "Esa opciÃ³n no existe. Elige 1, 2 o 3." << RESET << endl;
+        cout << ROJO << "Esa opción no existe. Elige 1, 2 o 3." << RESET << endl;
     } while (opcion < 1 || opcion > 3);
 
     return opcion;
@@ -146,7 +147,7 @@ void reglas()
          |___/                                       |___/     )" << RESET << endl;
     cout << "Cada jugador tiene un tablero en el que coloca sus barcos.\nLos jugadores se turnan para realizar disparos y tratar de hundir los barcos del oponente." << endl;
     cout << "El primer jugador en hundir todos los barcos del oponente gana la partida." << endl;
-    cout << "Para rendirte una vez iniciada la partida, al pedir coordenadas presione la letra Q y debera aparecer un mensaje." << endl;
+    cout << "Para rendirte una vez iniciada la partida, al pedir coordenadas presione la letra Q y deberá aparecer un mensaje." << endl;
     cout << ROSA << "------------------------------------------------------------------------------------------------------------------------" << RESET << endl;
     cout << R"(   ___                          ___  _                    _ __   __
   / _ )___ ____________  ___   / _ \(_)__ ___  ___  ___  (_) /  / /__ ___
@@ -158,7 +159,7 @@ void reglas()
     cout << "  - 2 Destructores.       (3 espacios)" << endl;
     cout << "  - 1 Lancha.             (2 espacios)" << endl;
     cout << ROSA << "------------------------------------------------------------------------------------------------------------------------" << RESET << endl;
-    cout << "\nPRESIONE ENTER PARA REGRESAR AL MENU: ";
+    cout << "\nPRESIONE ENTER PARA REGRESAR AL MENÚ: ";
     cin.get();
     limpiarConsola();
     return;
@@ -188,11 +189,12 @@ int juego()
     iniciar_tablero(tablero_jugador2);
     iniciar_tablero(tiros_jugador1);
     iniciar_tablero(tiros_jugador2);
+    // BUG: habia puesto iniciar_tablero(tablero_jugador1) y iniciar_tablero(tablero_jugador2) pero no los que tienen los tiros entonces solo enseñaba el tablero y no el tablero con los tiros
     //son 4 tableros porque son dos que muestran los tiros que se hacen y otro pues las tablas normal
     colocar_barcos(tablero_jugador1);
     colocar_barcos(tablero_jugador2);
-
-      cout << ROSA << "\nLos barcos han sido colocados." << RESET << endl;
+    // BUG: habia olvidadlo poner los colocar_barcos adentro del juego
+    cout << ROSA << "\nLos barcos han sido colocados." << RESET << endl;
     cout << "\nPRESIONE ENTER PARA CONTINUAR: ";
     cin.ignore();
     cin.get();
@@ -228,7 +230,7 @@ int juego()
             else
                 cout << AZUL << "\nLe pegaste... pero al agua JAJAJA." << RESET << endl;
 
-            if (alguien_gano(tablero_jugador2) == true) // BUG: antes revisaba tablero_jugador1, hay que revisar al que le dispararon
+            if (alguien_gano(tablero_jugador2) == true) // BUG: antes revisaba tablero_jugador1 y pues habia que revisar al que le dispararon
             {
                 limpiarConsola();
                 mostrar_tableros(segundo_nombre, tablero_jugador2, primer_nombre, tiros_jugador2);
@@ -237,9 +239,9 @@ int juego()
                 cin.get();
                 activo = false;
             }
-            else turno = 2; // BUG: antes decia turno = 1, nunca cambiaba de turno
+            else turno = 2; // BUG: antes decia turno = 1 y nunca cambiaba de turno (es una tonteria pero es q tenia sueño)
         }
-        else // turno == 2
+        else // el mismo codigo pero parra el segundo jugador
         {
             mostrar_tableros(primer_nombre, tiros_jugador1, segundo_nombre, tiros_jugador2);
 
@@ -321,7 +323,7 @@ void colocar_barcos(char tablero[tam_tablero][tam_tablero])
             {
                 if(direccion == 1)
                 {
-                    if(tablero[fila + j][columna] != agua) // BUG: antes era [fila][columna+j] en vertical, estaba al reves
+                    if(tablero[fila + j][columna] != agua) // BUG: antes era [fila][columna+j], estaba al reves
                         choca = true;
                 }
                 else
@@ -329,7 +331,7 @@ void colocar_barcos(char tablero[tam_tablero][tam_tablero])
                     if(tablero[fila][columna + j] != agua)
                         choca = true;
                 }
-            } // BUG: el if(choca==false) estaba DENTRO de este for, lo saque afuera para que revise todo el barco antes de colocarlo
+            }
 
             if(choca == false)
             {
