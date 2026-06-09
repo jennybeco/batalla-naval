@@ -207,7 +207,7 @@ int juego()
 
         if (turno == 1)
         {
-            mostrar_tablero2(tiros_jugador1[tam_tablero][tam_tablero]); // muestra el tablero de la primera jugadora con A de mujer
+            mostrar_tablero(tiros_jugador1[tam_tablero][tam_tablero]); // muestra el tablero de la primera jugadora con A de mujer
             cout << ROSA << "Turno de " << primer_nombre << RESET << endl;
             cout << "Ingresa las coordenadas de tu disparo:" << endl;
 
@@ -240,7 +240,7 @@ int juego()
         }
         else // turno == 2
         {
-            mostrar_tablero1(tiros_jugador2[tam_tablero][tam_tablero]);
+            mostrar_tablero(tiros_jugador2[tam_tablero][tam_tablero]);
 
             cout << ROSA << "Turno de " << segundo_nombre << RESET << endl;
             cout << "Ingresa las coordenadas de tu disparo:" << endl;
@@ -355,31 +355,16 @@ bool alguien_gano(char tablero[tam_tablero][tam_tablero])
 }
 
 
-void mostrar_tablero1(char jugador1[tam_tablero])
+void mostrar_tablero(char jugador[tam_tablero][tam_tablero])
 {
-    for(int i = 0; i < 99; i++)
+    for(int i = 0; i < 10; i++)
     {
-        int cambio_Renglon = 4;
-        cout << jugador1[i];
-        if(i == cambio_Renglon)
-        {
-            cout << "\n";
-            cambio_Renglon += 5;
-        }
+        for(int j = 0; j < 10; i++)
+            {
+                cout << jugador[i][j];
+            }
+        cout << "\n";
     }
 }
-
-void mostrar_tablero2(char jugador2[tam_tablero])
-{
-    for(int i = 0; i < 99; i++)
-    {
-        int cambio_Renglon = 4;
-        cout << jugador2[i];
-        if(i == cambio_Renglon)
-        {
-            cout << "\n";
-            cambio_Renglon += 5;
-        }
-    }
 
 }
