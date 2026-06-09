@@ -29,8 +29,13 @@ const char espacio_barco= 'B', destruye_barco= 'X', no_barco= 'O', agua= '~';;
 
 int menu(), juego();
 void pantallaInicio(), limpiarConsola(), reglas(),  iniciar_tablero(char tablero[tam_tablero][tam_tablero]), colocar_barcos(char tablero[tam_tablero][tam_tablero]);
+<<<<<<< HEAD
 void mostrar_tableros(string primer_nombre, char tiros_jugador1[tam_tablero][tam_tablero], string segundo_nombre, char tiros_jugador2[tam_tablero][tam_tablero]);
 bool realizar_disparo(char tablero_jugador[tam_tablero][tam_tablero],char tiros_jugador[tam_tablero][tam_tablero],int fila,int columna); // BUG: me tarde un monton decubriendo que le tenia que poner int fila, int columna
+=======
+void mostrar_tablero(char jugador[tam_tablero][tam_tablero]);
+bool realizar_disparo(char tablero_jugador[tam_tablero][tam_tablero],char tiros_jugador[tam_tablero][tam_tablero],int fila,int columna);
+>>>>>>> e94fd249dadbd5fae369f9c921ac9808117344a3
 bool pedir_coordenada(string nombre, int &fila, int &columna,char tiros_jugador[tam_tablero][tam_tablero]), alguien_gano(char tablero[tam_tablero][tam_tablero]);
 //BUG: no cambiaba de valor la fila y la columa porque no le habia puesto el &
 
@@ -209,8 +214,7 @@ int juego()
 
         if (turno == 1)
         {
-            mostrar_tableros(primer_nombre, tiros_jugador1, segundo_nombre, tiros_jugador2); // muestra el tablero de la primera jugadora con A de mujer
-
+            mostrar_tablero(tiros_jugador1); // muestra el tablero de la primera jugadora con A de mujer
             cout << ROSA << "Turno de " << primer_nombre << RESET << endl;
             cout << "Ingresa las coordenadas de tu disparo:" << endl;
 
@@ -233,7 +237,10 @@ int juego()
             if (alguien_gano(tablero_jugador2) == true) // BUG: antes revisaba tablero_jugador1 y pues habia que revisar al que le dispararon
             {
                 limpiarConsola();
-                mostrar_tableros(segundo_nombre, tablero_jugador2, primer_nombre, tiros_jugador2);
+                cout << segundo_nombre << endl;
+                mostrar_tablero(tablero_jugador2);
+                cout << primer_nombre << endl;
+                mostrar_tablero(tiros_jugador1);
                 cout << ROSA << "\n" << primer_nombre << " Ganaste!!! Hundiste todos los barcos, suertudot@.\n" << RESET;
                 cout << "\nPRESIONE ENTER PARA CONTINUAR: ";
                 cin.get();
@@ -243,7 +250,7 @@ int juego()
         }
         else // el mismo codigo pero parra el segundo jugador
         {
-            mostrar_tableros(primer_nombre, tiros_jugador1, segundo_nombre, tiros_jugador2);
+            mostrar_tablero(tiros_jugador2);
 
             cout << ROSA << "Turno de " << segundo_nombre << RESET << endl;
             cout << "Ingresa las coordenadas de tu disparo:" << endl;
@@ -267,7 +274,10 @@ int juego()
             if (alguien_gano(tablero_jugador1) == true)
             {
                 limpiarConsola();
-                mostrar_tableros(primer_nombre, tiros_jugador1, segundo_nombre, tiros_jugador2);
+                cout << primer_nombre << endl;
+                mostrar_tablero(tablero_jugador1);
+                cout << segundo_nombre << endl;
+                mostrar_tablero(tiros_jugador2);
                 cout << ROSA << "\n" << segundo_nombre << " Ganaste!!! Hundiste todos los barcos, suertudot@.\n" << RESET;
                 cout << "\nPRESIONE ENTER PARA CONTINUAR: ";
                 cin.get();
@@ -355,4 +365,110 @@ bool alguien_gano(char tablero[tam_tablero][tam_tablero])
             if (tablero[d][j] == espacio_barco)
                 return false;
     return true; // regresa true si ya no queda ninguna B y pues false si todavia hay alguno
+}
+
+
+void mostrar_tablero(char jugador[tam_tablero][tam_tablero])
+{
+    for(int i = 0; i < 10; i++)
+    {
+        for(int j = 0; j < 10; j++)
+            {
+                cout << jugador[i][j];
+            }
+        cout << "\n";
+    }
+}
+
+bool pedir_coordenada(string nombre, int &fila, int &columna, char tiros_jugador[tam_tablero][tam_tablero])
+{   // funcion escrita HORRIBLE me da TERROR ver los if anidados -- estoy muy sleep deprived para reescribirla
+    string entrada_fila, entrada_columna; // string para evitar problemas con c++ ://///
+    bool valida = false;
+
+    while (valida == false)
+    {
+        cout << "\nFila (0-9) [o presiona 'Q' para rendirte]: ";
+        cin >> entrada_fila;
+
+        if (entrada_fila.length() != 1)
+        {
+            cout << "Ingrese un solo caracter. Digito del 0 al 9 o 'Q' para rendirte." << endl;
+        }
+        else
+        {
+            if (entrada_fila != "Q" && entrada_fila != "q")
+            {
+                if (!isdigit(entrada_fila[0])) // validacion de si NO es numero del 0 al 9
+                {
+                    cout << "Ingresa un número del 0 al 9 (o la letra Q para rendirte)." << endl;
+                }
+                else
+                {
+                    fila = entrada_fila[0] - '0'; // convierte el primer caracter del string (que solo puede tener uno) en int
+
+                    cout << "\nColumna (0-9) [o presiona 'Q' para rendirte]: ";
+                    cin >> entrada_columna;
+                    if (entrada_columna.length() != 1)
+                    {
+                        cout << "Ingrese un solo caracter. Digito del 0 al 9 o 'Q' para rendirte." << endl;
+                    }
+                    else
+                    {
+                        if (entrada_columna != "Q" && entrada_columna != "q")
+                        {
+                            if (!isdigit(entrada_columna[0])) // validacion de si NO es numero del 0 al 9
+                            {
+                                cout << "Ingresa un número del 0 al 9 (o la letra Q para rendirte)." << endl;
+                            }
+                            else
+                            {
+                                columna = entrada_columna[0] - '0'; // convierte el primer caracter del string (que solo puede tener uno) en int
+                                if (fila >= 0 && fila < tam_tablero && columna >= 0 && columna < tam_tablero)
+                                {
+                                    if (tiros_jugador[fila][columna] == agua)
+                                    {
+                                        valida = true;
+                                    }
+                                    else
+                                    {
+                                        cout << "Ya disparaste en esa coordenada. Intenta otra." << endl;
+                                    }
+                                }
+                                else
+                                {
+                                    cout << "Las coordenadas deben ser del 0 al 9." << endl;
+                                }
+                            }
+                        }
+                        else
+                        {
+                            return false; // returns false para rendirse
+                        }
+                    }
+                }
+            }
+            else
+            {
+                return false; // returns false para rendirse
+            }
+        }
+    }
+
+    return true;
+}
+
+bool realizar_disparo(char tablero_jugador[tam_tablero][tam_tablero], char tiros_jugador[tam_tablero][tam_tablero], int fila, int columna)
+{
+    if (tablero_jugador[fila][columna] == espacio_barco) // compara el tablero con la coordenada previamente validada
+    {
+        tablero_jugador[fila][columna] = destruye_barco; // si la coordenada corresponde a la de un barco, marca en ambos tableros el disparo
+        tiros_jugador[fila][columna] = destruye_barco;
+        return true; // returns true para el mensaje de "le pegaste a un barco"
+    }
+    else
+    {
+        tablero_jugador[fila][columna] = no_barco; // si la coordenada no corresponde a un barco, marca que no hay barco en ambos tableros
+        tiros_jugador[fila][columna] = no_barco;
+        return false; // returns false para el mensaje de "no le pegaste a nada"
+    }
 }
